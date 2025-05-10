@@ -1,28 +1,37 @@
 package com.tgcannabis.authentication.security;
 
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
 import org.springframework.stereotype.Service;
+import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
+
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 
 @Service
 public class JWTTokenService {
 
-    private final String SECRET_KEY = "C4nn4b1s2025*"; // Reemplaza por algo más seguro
-    private final long EXPIRATION_TIME = 86400000; // 1 día en ms
+    private final String secretString = "dc4d53ba57bb6bae9dcab955fb62204e794208fa15cb824877a99768085d6c7c";
+    private final SecretKey SECRET_KEY = Keys.hmacShaKeyFor(secretString.getBytes(StandardCharsets.UTF_8)); // 32+ chars
 
     public String generateToken(String email) {
+        long EXPIRATION_TIME = 86400000L; // 1 day in ms
         return Jwts.builder()
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
-                .signWith(SignatureAlgorithm.HS512, SECRET_KEY)
+                .subject(email)
+                .issuedAt(new Date())
+                .expiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
+                .signWith(SECRET_KEY, Jwts.SIG.HS256)
                 .compact();
     }
 
     public boolean validarToken(String token) {
         try {
-            Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token);
+            Jwts.parser()
+                    .verifyWith(SECRET_KEY)
+                    .build()
+                    .parseSignedClaims(token);
             return true;
         } catch (JwtException e) {
             return false;
@@ -30,9 +39,11 @@ public class JWTTokenService {
     }
 
     public String getUserId(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY)
-                .parseClaimsJws(token)
-                .getBody()
+        return Jwts.parser()
+                .verifyWith(SECRET_KEY)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
                 .getSubject();
     }
 }
