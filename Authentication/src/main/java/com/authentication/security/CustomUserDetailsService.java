@@ -1,0 +1,23 @@
+package com.authentication.security;
+
+import com.authentication.model.Account;
+import com.authentication.service.AccountService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.*;
+import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Autowired
+    private AccountService accountService;
+
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Account account = accountService.getAccountByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+        return new User(account.getEmail(), account.getPassword(), Collections.emptyList());
+    }
+}

@@ -1,12 +1,16 @@
 package com.authentication.controller;
 
 import com.authentication.model.Account;
+import com.authentication.security.JWTTokenService;
 import com.authentication.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -15,6 +19,11 @@ public class AccountController {
 
     @Autowired
     private AccountService accountService;
+    @Autowired
+    private JWTTokenService jwtTokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Endpoint para registrar una cuenta
     @PostMapping("/register")
@@ -32,11 +41,20 @@ public class AccountController {
 
     // Endpoint para login (se puede hacer con validación de credenciales)
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody Account account) {
+    public ResponseEntity<?> login(@RequestBody Account account) {
         Optional<Account> existingAccount = accountService.getAccountByEmail(account.getEmail());
-        if (existingAccount.isPresent() && existingAccount.get().getPassword().equals(account.getPassword())) {
-            return ResponseEntity.ok("Login exitoso");
+        if (existingAccount.isPresent() &&
+            passwordEncoder.matches(account.getPassword(), existingAccount.get().getPassword())) {
+            String token = jwtTokenService.generateToken(account.getEmail());
+            Map<String, String> response = new HashMap<>();
+            response.put("token", token);
+            return ResponseEntity.ok(response);
+
         }
+        System.out.println("Contraseña ingresada: " + account.getPassword());
+        System.out.println("Contraseña almacenada: " + existingAccount.get().getPassword());
+        System.out.println("Match: " + passwordEncoder.matches(account.getPassword(), existingAccount.get().getPassword()));
+
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Credenciales incorrectas");
     }
 

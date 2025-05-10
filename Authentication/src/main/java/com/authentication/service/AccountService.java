@@ -3,6 +3,7 @@ package com.authentication.service;
 import com.authentication.model.Account;
 import com.authentication.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.Optional;
 
@@ -11,6 +12,8 @@ public class AccountService {
 
     @Autowired
     private  AccountRepository accountRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     // Crear una cuenta
     public Account saveAccount(Account account) throws IllegalStateException {
@@ -18,6 +21,7 @@ public class AccountService {
         if (existingAccount) {
             throw new IllegalStateException("El correo ya está registrado");
         }
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
     // Actualizar cuenta:
