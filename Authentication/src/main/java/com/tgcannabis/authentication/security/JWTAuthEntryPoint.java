@@ -1,4 +1,4 @@
-package com.authentication.security;
+package com.tgcannabis.authentication.security;
 
 import java.io.IOException;
 

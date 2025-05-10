@@ -1,4 +1,4 @@
-package com.authentication.model;
+package com.tgcannabis.authentication.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

@@ -1,6 +1,6 @@
-package com.authentication.repository;
+package com.tgcannabis.authentication.repository;
 
-import com.authentication.model.Account;
+import com.tgcannabis.authentication.model.Account;
 
 import java.util.Optional;
 

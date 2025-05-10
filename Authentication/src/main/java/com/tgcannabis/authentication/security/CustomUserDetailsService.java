@@ -1,7 +1,7 @@
-package com.authentication.security;
+package com.tgcannabis.authentication.security;
 
-import com.authentication.model.Account;
-import com.authentication.service.AccountService;
+import com.tgcannabis.authentication.model.Account;
+import com.tgcannabis.authentication.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;

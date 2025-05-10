@@ -1,4 +1,4 @@
-package com.authentication.security;
+package com.tgcannabis.authentication.security;
 
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Service;

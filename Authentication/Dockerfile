@@ -5,8 +5,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copia solo el .jar generado
-COPY target/authentication-0.0.1-SNAPSHOT.jar /app/app.jar
-
+COPY target/authentication-1.0.0.jar /app/app.jar
 
 # Expone el puerto
 EXPOSE 8080
