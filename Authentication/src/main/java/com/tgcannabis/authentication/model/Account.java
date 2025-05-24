@@ -16,7 +16,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "accounts")
 public class Account {
-
     @Id
     @Email
     private String email;

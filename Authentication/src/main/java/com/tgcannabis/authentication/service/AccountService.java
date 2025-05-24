@@ -2,44 +2,36 @@ package com.tgcannabis.authentication.service;
 
 import com.tgcannabis.authentication.model.Account;
 import com.tgcannabis.authentication.repository.AccountRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class AccountService {
 
-    @Autowired
-    private  AccountRepository accountRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final AccountRepository accountRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    // Crear una cuenta
     public Account saveAccount(Account account) throws IllegalStateException {
         boolean existingAccount = accountRepository.existsByEmail(account.getEmail());
         if (existingAccount) {
-            throw new IllegalStateException("El correo ya está registrado");
+            throw new IllegalStateException("Email already registered");
         }
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
-    // Actualizar cuenta:
+
     public Account updateAccount(Account account) throws IllegalStateException {
         return accountRepository.save(account);
     }
 
-    // Obtener una cuenta por email
     public Optional<Account> getAccountByEmail(String email) {
         return accountRepository.findById(email);
     }
 
-    // Obtener todas las cuentas
-    public Iterable<Account> getAllAccounts() {
-        return accountRepository.findAll();
-    }
-
-    // Eliminar una cuenta por email
     public void deleteAccountByEmail(String email) {
         accountRepository.deleteById(email);
     }

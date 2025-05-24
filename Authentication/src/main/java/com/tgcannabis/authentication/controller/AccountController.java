@@ -3,6 +3,7 @@ package com.tgcannabis.authentication.controller;
 import com.tgcannabis.authentication.model.Account;
 import com.tgcannabis.authentication.security.JWTTokenService;
 import com.tgcannabis.authentication.service.AccountService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,12 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/accounts")
+@RequiredArgsConstructor
 public class AccountController {
 
-    @Autowired
-    private AccountService accountService;
-    @Autowired
-    private JWTTokenService jwtTokenService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final AccountService accountService;
+    private final JWTTokenService jwtTokenService;
+    private final PasswordEncoder passwordEncoder;
 
     // Endpoint para registrar una cuenta
     @PostMapping("/register")

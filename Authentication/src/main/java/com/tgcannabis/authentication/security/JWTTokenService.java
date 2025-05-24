@@ -26,7 +26,7 @@ public class JWTTokenService {
                 .compact();
     }
 
-    public boolean validarToken(String token) {
+    public boolean validateToken(String token) {
         try {
             Jwts.parser()
                     .verifyWith(SECRET_KEY)
